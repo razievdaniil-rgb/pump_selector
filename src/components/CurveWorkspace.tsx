@@ -38,10 +38,10 @@ export function CurveWorkspace({
       .filter((item) => item.level !== "excluded")
       .slice(0, 3),
     [visible, setVisible] = useState<string[]>(
-      candidates.map((item) => item.id),
+      candidates.length ? [candidates[0].id] : [],
     ),
-    [types, setTypes] = useState<CurveType[]>(["QH"]),
-    [combined, setCombined] = useState(false),
+    [types, setTypes] = useState<CurveType[]>(["QH", "EFF", "NPSH", "POWER"]),
+    [combined, setCombined] = useState(true),
     [editing, setEditing] = useState(false);
   const shownTypes = combined
       ? (["QH", "EFF", "NPSH", "POWER"] as CurveType[])
