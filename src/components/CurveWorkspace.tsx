@@ -148,16 +148,35 @@ export function CurveWorkspace({
       <div className="curve-layout">
         <section
           className="curve-actions card"
-          aria-label="??????????? ???????"
+          aria-label={
+            "\u0418\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u044b \u0433\u0440\u0430\u0444\u0438\u043a\u0430"
+          }
         >
-          <button type="button">+ ???????? ??????</button>
-          <button type="button">+ ???????? ?????????</button>
           <button type="button">
-            ????????????? <span>?</span>
+            {
+              "+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0433\u0440\u0430\u0444\u0438\u043a"
+            }
           </button>
-          <button type="button">????? ??????? ????????</button>
+          <button type="button">
+            {
+              "+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b"
+            }
+          </button>
+          <button type="button">
+            {
+              "\u0420\u0435\u0433\u0443\u043b\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435"
+            }{" "}
+            <span>{"\u2304"}</span>
+          </button>
+          <button type="button">
+            {
+              "\u0421\u043c\u0435\u043d\u0430 \u0440\u0430\u0431\u043e\u0447\u0435\u0439 \u0436\u0438\u0434\u043a\u043e\u0441\u0442\u0438"
+            }
+          </button>
           <span className="curve-layer-note">
-            ??????? ???? ? BEP ? ????????? ??????
+            {
+              "\u0420\u0430\u0431\u043e\u0447\u0430\u044f \u0442\u043e\u0447\u043a\u0430 \u00b7 BEP \u00b7 \u0434\u043e\u043f\u0443\u0441\u0442\u0438\u043c\u0430\u044f \u0437\u043e\u043d\u0430"
+            }
           </span>
         </section>
         <aside className="curve-models card">
@@ -248,7 +267,6 @@ export function CurveWorkspace({
                 />
               )),
             )}
-            <path className="required-head" d={`M80 365 Q${px} ${py} 850 70`} />
             <circle className="engineering-point" cx={px} cy={py} r="9" />
             <g
               className="engineering-tooltip"

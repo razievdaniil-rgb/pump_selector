@@ -16,17 +16,24 @@ export function MultiCurveChart({
       <div className="chart-legend">
         <span className="legend-stroke qh" />
         Q-H <span className="legend-stroke eff" />
-        ??? <span className="legend-stroke npsh" />
+        {"\u041a\u041f\u0414"} <span className="legend-stroke npsh" />
         NPSH <span className="legend-stroke power" />
         P2 <span className="zone-box" />
-        ??????? ???? <span className="point-dot" />
-        ??????? ?????
+        {
+          "\u0420\u0430\u0431\u043e\u0447\u0430\u044f \u0437\u043e\u043d\u0430"
+        }{" "}
+        <span className="point-dot" />
+        {
+          "\u0420\u0430\u0431\u043e\u0447\u0430\u044f \u0442\u043e\u0447\u043a\u0430"
+        }
       </div>
       <svg
         className="qh-chart"
         viewBox="0 0 680 330"
         role="img"
-        aria-label="?????????? ?????????????? ??????"
+        aria-label={
+          "\u0413\u0440\u0430\u0444\u0438\u043a \u0438\u043d\u0436\u0435\u043d\u0435\u0440\u043d\u044b\u0445 \u043a\u0440\u0438\u0432\u044b\u0445"
+        }
       >
         <g className="grid-lines">
           <path d="M62 36V280M156 36V280M250 36V280M344 36V280M438 36V280M532 36V280M628 36V280" />
@@ -68,10 +75,10 @@ export function MultiCurveChart({
         <circle className="work-point" cx={px} cy={py} r="8" />
         <g className="axis-labels">
           <text x="22" y="40">
-            H, ?
+            {"H, \u043c"}
           </text>
           <text x="592" y="315">
-            Q, ??/?
+            {"Q, \u043c\u00b3/\u0447"}
           </text>
           {[0, 20, 40, 60, 80, 100].map((value, index) => (
             <text key={value} x={55 + index * 94} y="303">
@@ -85,13 +92,15 @@ export function MultiCurveChart({
         >
           <rect width="150" height="70" rx="8" />
           <text x="12" y="20">
-            ??????? ?????
+            {
+              "\u0420\u0430\u0431\u043e\u0447\u0430\u044f \u0442\u043e\u0447\u043a\u0430"
+            }
           </text>
           <text x="12" y="40">
-            Q {context.q} ? H {context.h}
+            Q {context.q} {"\u00b7"} H {context.h}
           </text>
           <text x="12" y="58">
-            ??? {pump?.efficiency ?? "?"}%
+            {"\u041a\u041f\u0414"} {pump?.efficiency ?? "\u2014"}%
           </text>
         </g>
       </svg>
