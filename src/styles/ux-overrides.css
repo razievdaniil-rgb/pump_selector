@@ -439,3 +439,21 @@
   background: #f8fafc;
   box-shadow: 0 4px 14px rgba(28, 37, 51, 0.06);
 }
+
+.purpose-compatibility-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #edf8f2;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.purpose-compatibility-note .ui-icon {
+  flex: none;
+  margin-top: 1px;
+}
