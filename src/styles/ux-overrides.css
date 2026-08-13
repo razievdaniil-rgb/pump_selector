@@ -10,3 +10,6 @@
 .selection-dock .dock-restart{height:38px;padding:0 12px;border:0;background:transparent;color:var(--blue);font-size:11px;font-weight:650}.selection-dock .dock-submit{height:42px;padding:0 24px;border:0;border-radius:8px;background:var(--black);color:#fff;font-weight:750}@media(max-width:560px){.selection-dock .dock-restart{padding:0 6px;font-size:10px}.selection-dock .dock-submit{padding:0 13px}}
 
 .scenario{transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease}.scenario:hover,.scenario:focus-visible{border-color:var(--blue);background:#fbfdff;box-shadow:0 6px 18px rgba(47,111,237,.08)}
+
+/* Scenario cards are choices, not a preselected radio group. */
+.scenario:hover,.scenario:focus-visible{border-color:var(--border);background:#f8fafc;box-shadow:0 4px 14px rgba(28,37,51,.06)}
