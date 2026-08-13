@@ -457,3 +457,44 @@
   flex: none;
   margin-top: 1px;
 }
+
+.graph-empty {
+  min-height: 280px;
+  margin-top: 18px;
+  border: 1px dashed #cfd7e4;
+  border-radius: 10px;
+  background: #f8fafc;
+  display: grid;
+  place-content: center;
+  gap: 7px;
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+}
+.graph-empty strong {
+  color: var(--text);
+  font-size: 15px;
+}
+.graph-empty span {
+  max-width: 460px;
+  font-size: 11px;
+}
+.curve-canvas:fullscreen {
+  padding: 28px;
+  background: #fff;
+  overflow: auto;
+}
+.curve-canvas:fullscreen .engineering-chart {
+  height: calc(100vh - 110px);
+  max-height: none;
+}
+.dialog-field {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 650;
+}
+.demo-dialog:focus {
+  outline: none;
+}

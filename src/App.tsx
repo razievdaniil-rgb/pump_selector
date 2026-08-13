@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header, type HeaderAction } from "./components/Header";
 import { CurveWorkspace } from "./components/CurveWorkspace";
 import { ModelSearchStep } from "./components/ModelSearchStep";
@@ -57,12 +57,23 @@ export default function App() {
       HeaderAction | "details" | "assistant" | null
     >(null),
     [details, setDetails] = useState<PumpResult | null>(null),
+    [quoteCompany, setQuoteCompany] = useState(""),
     [allowedPumpTypes, setAllowedPumpTypes] = useState<string[] | null>(null);
   const resultsRef = useRef<HTMLElement | null>(null),
+    dialogRef = useRef<HTMLElement | null>(null),
     eligibleCatalog = catalog.filter((pump) =>
       isPumpTypeAllowed(pump.pumpType, allowedPumpTypes),
     ),
     items = sortResults(calculateResults(eligibleCatalog, context), sort);
+  useEffect(() => {
+    if (!dialog) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setDialog(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.setTimeout(() => dialogRef.current?.focus(), 0);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [dialog]);
   function selectMode(next: SelectionMode) {
     setAllowedPumpTypes(null);
     setMode(next);
@@ -81,6 +92,16 @@ export default function App() {
       ...preset.context,
       pumpType: allowed.includes(preferred) ? preferred : allowed[0],
     };
+    const allowedIds = new Set(
+      catalog
+        .filter((pump) => allowed.includes(pump.pumpType))
+        .map((pump) => pump.id),
+    );
+    setCompared((current) => {
+      const nextCompared = current.filter((id) => allowedIds.has(id));
+      localStorage.setItem("apgs-compared", JSON.stringify(nextCompared));
+      return nextCompared;
+    });
     setAllowedPumpTypes(allowed);
     setDraft(next);
     setMode("purpose");
@@ -300,13 +321,22 @@ export default function App() {
       {dialog && (
         <div className="dialog-backdrop" onMouseDown={() => setDialog(null)}>
           <section
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialog-title"
+            tabIndex={-1}
             className="demo-dialog"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <button className="dialog-close" onClick={() => setDialog(null)}>
+            <button
+              className="dialog-close"
+              aria-label="Закрыть окно"
+              onClick={() => setDialog(null)}
+            >
               ×
             </button>
-            <h2>
+            <h2 id="dialog-title">
               {dialog === "specification"
                 ? "Спецификация"
                 : dialog === "comparison"
@@ -342,8 +372,31 @@ export default function App() {
                   setNotice("Заявка на КП сохранена в демо-режиме");
                 }}
               >
-                <input required placeholder="Имя" />
-                <input required placeholder="Телефон" />
+                <label className="dialog-field">
+                  <span>Имя *</span>
+                  <input required name="name" autoComplete="name" />
+                </label>
+                <label className="dialog-field">
+                  <span>Телефон *</span>
+                  <input required type="tel" name="phone" autoComplete="tel" />
+                </label>
+                <label className="dialog-field">
+                  <span>
+                    {"\u041a\u043e\u043c\u043f\u0430\u043d\u0438\u044f"}
+                  </span>
+                  <input
+                    name="company"
+                    autoComplete="organization"
+                    value={quoteCompany}
+                    onChange={(event) => setQuoteCompany(event.target.value)}
+                  />
+                </label>
+                {quoteCompany.trim() && (
+                  <label className="dialog-field">
+                    <span>{"\u0418\u041d\u041d"}</span>
+                    <input name="inn" inputMode="numeric" />
+                  </label>
+                )}
                 <button className="button primary">Отправить заявку</button>
               </form>
             ) : dialog === "assistant" ? (

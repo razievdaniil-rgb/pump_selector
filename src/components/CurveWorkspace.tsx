@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { PumpResult, SelectionContext } from "../domain/types";
 import { Icon } from "./Icon";
 
@@ -42,7 +42,8 @@ export function CurveWorkspace({
     ),
     [types, setTypes] = useState<CurveType[]>(["QH", "EFF", "NPSH", "POWER"]),
     [combined, setCombined] = useState(true),
-    [editing, setEditing] = useState(false);
+    [editing, setEditing] = useState(false),
+    chartRef = useRef<HTMLElement>(null);
   const shownTypes = combined
       ? (["QH", "EFF", "NPSH", "POWER"] as CurveType[])
       : types,
@@ -79,7 +80,7 @@ export function CurveWorkspace({
         </div>
         <button
           className="button ghost curve-fullscreen"
-          onClick={() => document.documentElement.requestFullscreen?.()}
+          onClick={() => chartRef.current?.requestFullscreen?.()}
         >
           <span>⛶</span> На весь экран
         </button>
@@ -146,39 +147,6 @@ export function CurveWorkspace({
         </div>
       </section>
       <div className="curve-layout">
-        <section
-          className="curve-actions card"
-          aria-label={
-            "\u0418\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u044b \u0433\u0440\u0430\u0444\u0438\u043a\u0430"
-          }
-        >
-          <button type="button">
-            {
-              "+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0433\u0440\u0430\u0444\u0438\u043a"
-            }
-          </button>
-          <button type="button">
-            {
-              "+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b"
-            }
-          </button>
-          <button type="button">
-            {
-              "\u0420\u0435\u0433\u0443\u043b\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435"
-            }{" "}
-            <span>{"\u2304"}</span>
-          </button>
-          <button type="button">
-            {
-              "\u0421\u043c\u0435\u043d\u0430 \u0440\u0430\u0431\u043e\u0447\u0435\u0439 \u0436\u0438\u0434\u043a\u043e\u0441\u0442\u0438"
-            }
-          </button>
-          <span className="curve-layer-note">
-            {
-              "\u0420\u0430\u0431\u043e\u0447\u0430\u044f \u0442\u043e\u0447\u043a\u0430 \u00b7 BEP \u00b7 \u0434\u043e\u043f\u0443\u0441\u0442\u0438\u043c\u0430\u044f \u0437\u043e\u043d\u0430"
-            }
-          </span>
-        </section>
         <aside className="curve-models card">
           <div className="panel-title">
             Модели на графике{" "}
@@ -216,7 +184,7 @@ export function CurveWorkspace({
             </span>
           </div>
         </aside>
-        <section className="curve-canvas card">
+        <section className="curve-canvas card" ref={chartRef}>
           <div className="curve-canvas-heading">
             <div>
               <h2>Гидравлические характеристики</h2>
