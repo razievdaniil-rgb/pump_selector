@@ -38,22 +38,26 @@ export function EngineeringChart({
   const [cursor, setCursor] = useState<{ q: number; x: number } | null>(null);
   const visible = series.filter((item) => layers.includes(item.type));
   const maxima = useMemo(() => {
-    const q =
-      Math.max(
-        10,
-        ...visible.flatMap((item) => item.points.map((point) => point.q)),
-        ...dutyPoints.map((point) => point.q),
-      ) * 1.08;
+    const rawQ = Math.max(
+      10,
+      ...visible.flatMap((item) => item.points.map((point) => point.q)),
+      ...dutyPoints.map((point) => point.q),
+    );
+    const q = Math.ceil(rawQ / 5) * 5;
     const scales = Object.fromEntries(
-      (["qh", "eff", "npsh", "power"] as CurveKey[]).map((type) => [
-        type,
-        Math.max(
+      (["qh", "eff", "npsh", "power"] as CurveKey[]).map((type) => {
+        const dutyValues =
+          type === "qh" ? dutyPoints.map((point) => point.h) : [];
+        const rawMax = Math.max(
           1,
           ...visible
             .filter((item) => item.type === type)
             .flatMap((item) => item.points.map((point) => point.value)),
-        ) * 1.12,
-      ]),
+          ...dutyValues,
+        );
+        const step = type === "npsh" || type === "power" ? 1 : 5;
+        return [type, Math.ceil(rawMax / step) * step];
+      }),
     ) as Record<CurveKey, number>;
     return { ...scales, q };
   }, [visible, dutyPoints]);
@@ -93,6 +97,7 @@ export function EngineeringChart({
         .filter(
           (item) => item.type !== "qh" || item.pumpId === primaryQh?.pumpId,
         )
+        .filter((item) => cursor.q <= (item.points.at(-1)?.q ?? 0))
         .map((item) => ({
           ...item,
           value: interpolate(item.points, cursor.q),
@@ -166,17 +171,30 @@ export function EngineeringChart({
             y2={y(npsha, "npsh")}
           />
         )}
-        {visible.map((item) => (
-          <path
-            key={item.key}
-            className={`plot-series plot-${item.type}`}
-            style={{
-              stroke: item.color,
-              strokeDasharray: item.dashed ? "8 6" : undefined,
-            }}
-            d={path(item.points, item.type)}
-          />
-        ))}
+        {visible.map((item) => {
+          const end = item.points.at(-1);
+          return (
+            <g key={item.key}>
+              <path
+                className={`plot-series plot-${item.type}`}
+                style={{
+                  stroke: item.color,
+                  strokeDasharray: item.dashed ? "8 6" : undefined,
+                }}
+                d={path(item.points, item.type)}
+              />
+              {item.type === "qh" && end && (
+                <circle
+                  className="curve-endpoint"
+                  cx={x(end.q)}
+                  cy={y(end.value, item.type)}
+                  r="3"
+                  style={{ fill: item.color }}
+                />
+              )}
+            </g>
+          );
+        })}
         {dutyPoints.map((point) => (
           <g key={point.id}>
             <line
