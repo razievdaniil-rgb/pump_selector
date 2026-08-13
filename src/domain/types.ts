@@ -1,5 +1,5 @@
 export type SelectionMode = 'qh' | 'model' | 'purpose' | 'assistant';
-export type SelectorScreen = 'start' | 'purpose' | 'model' | 'parameters' | 'results';
+export type SelectorScreen = 'start' | 'purpose' | 'model' | 'parameters' | 'results' | 'curves';
 export type ResultLevel = 'recommended' | 'suitable' | 'possible' | 'excluded';
 export type ResultTab = ResultLevel;
 export type SortMode = 'score' | 'power' | 'name';
