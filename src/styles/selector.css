@@ -166,3 +166,15 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 @media(max-width:360px){
   .selector-header nav button,.selector-header nav .quote{font-size:8px}
 }
+
+/* Verdict columns: preserve whole words at constrained desktop widths */
+.status{overflow-wrap:normal;word-break:keep-all;hyphens:none}
+@media(min-width:1501px){
+  .result-card{grid-template-columns:minmax(220px,1.55fr) minmax(122px,.65fr) minmax(112px,.68fr) minmax(135px,1fr)}
+}
+@media(max-width:1500px) and (min-width:1101px){
+  .result-card{grid-template-columns:minmax(240px,1.45fr) minmax(134px,.72fr) minmax(112px,.65fr) minmax(155px,1fr)}
+}
+@media(max-width:1100px) and (min-width:901px){
+  .result-card{grid-template-columns:minmax(210px,1.4fr) minmax(124px,.68fr) minmax(112px,.7fr)}
+}
