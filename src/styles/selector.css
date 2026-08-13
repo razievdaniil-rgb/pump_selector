@@ -178,3 +178,22 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 @media(max-width:1100px) and (min-width:901px){
   .result-card{grid-template-columns:minmax(210px,1.4fr) minmax(124px,.68fr) minmax(112px,.7fr)}
 }
+
+/* Stable verdict composition: icon + explicit status lines, never clipped */
+.result-score{overflow:visible;min-width:0;padding-right:10px}
+.status{display:grid;grid-template-columns:15px minmax(0,1fr);column-gap:6px;align-items:start;max-width:none;white-space:normal;overflow:visible;word-break:normal}
+.status .ui-icon{margin-top:0}
+.status-copy{display:flex;min-width:0;flex-direction:column;gap:1px}
+.status-copy>span{display:block;white-space:nowrap;line-height:1.2;overflow:visible}
+@media(min-width:1501px){
+  .result-card{grid-template-columns:minmax(220px,1.55fr) minmax(142px,.72fr) minmax(112px,.68fr) minmax(135px,1fr)}
+}
+@media(max-width:1500px) and (min-width:1101px){
+  .result-card{grid-template-columns:minmax(240px,1.45fr) minmax(148px,.78fr) minmax(112px,.65fr) minmax(155px,1fr)}
+}
+@media(max-width:1100px) and (min-width:901px){
+  .result-card{grid-template-columns:minmax(210px,1.4fr) minmax(142px,.76fr) minmax(112px,.7fr)}
+}
+@media(max-width:760px){
+  .result-score{padding-right:0}
+}
