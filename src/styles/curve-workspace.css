@@ -1272,3 +1272,124 @@
     grid-column: 1;
   }
 }
+
+/* Pumpolis-like graph priority: wide work area, one compact toolbar, full-width plots */
+@media (min-width: 901px) {
+  .steps,
+  .selector-grid {
+    grid-template-columns: 300px minmax(0, 1fr) !important;
+  }
+  .steps span:nth-child(3) {
+    display: none;
+  }
+  .right-rail {
+    grid-column: 1 / -1 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+  }
+  .right-rail > .card {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.inline-curve-workspace .curve-toolbar {
+  min-height: 56px;
+  padding: 8px 10px;
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+.inline-curve-workspace .curve-mode-tabs {
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  gap: 5px;
+  min-width: 0;
+  overflow: visible;
+}
+.inline-curve-workspace .curve-mode-tabs button {
+  height: 34px;
+  padding: 0 10px;
+  gap: 5px;
+  font-size: 10px;
+}
+.inline-curve-workspace .curve-mode-tabs button i {
+  width: 13px;
+}
+.inline-curve-workspace .chart-view-tools {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  gap: 5px;
+  margin-left: 0;
+}
+.inline-curve-workspace .chart-view-tools > button,
+.inline-curve-workspace .segmented button {
+  height: 34px;
+  padding: 0 9px;
+  font-size: 10px;
+}
+.inline-curve-workspace .curve-canvas {
+  padding: 16px 18px 10px;
+}
+.inline-curve-workspace .engineering-chart-v2 {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 1040 / 500;
+}
+.inline-curve-workspace .split-charts {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.inline-curve-workspace .split-chart {
+  padding: 14px 16px 10px;
+}
+.inline-curve-workspace .split-chart .engineering-chart-v2 {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 1040 / 500;
+}
+.inline-curve-workspace .plot-cursor text {
+  font-size: 12px;
+}
+.inline-curve-workspace .plot-cursor .tooltip-title {
+  font-size: 13px;
+}
+
+@media (max-width: 1180px) and (min-width: 901px) {
+  .inline-curve-workspace .chart-view-tools {
+    width: auto;
+    justify-content: flex-end;
+  }
+  .inline-curve-workspace .curve-toolbar {
+    align-items: center;
+  }
+  .inline-curve-workspace .curve-mode-tabs button {
+    padding: 0 7px;
+    font-size: 9px;
+  }
+  .inline-curve-workspace .chart-view-tools > button,
+  .inline-curve-workspace .segmented button {
+    padding: 0 7px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 900px) {
+  .inline-curve-workspace .curve-toolbar {
+    flex-wrap: wrap;
+  }
+  .inline-curve-workspace .curve-mode-tabs {
+    flex: 1 1 100%;
+    overflow-x: auto;
+  }
+  .inline-curve-workspace .chart-view-tools {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .right-rail {
+    margin-top: 0;
+  }
+}

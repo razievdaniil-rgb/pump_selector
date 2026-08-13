@@ -286,21 +286,21 @@ export function EngineeringChart({
               r="6"
             />
             <g
-              transform={`translate(${Math.min(cursor.x + 14, W - 240)} ${P.top + 18})`}
+              transform={`translate(${Math.min(cursor.x + 16, W - 310)} ${P.top + 18})`}
             >
               <rect
-                width="220"
-                height={44 + tooltipSeries.length * 19}
+                width="286"
+                height={56 + tooltipSeries.length * 23}
                 rx="10"
               />
-              <text x="14" y="22" className="tooltip-title">
+              <text x="16" y="26" className="tooltip-title">
                 Q {cursor.q.toFixed(1)} м³/ч
               </text>
               {tooltipSeries.map((item, index) => (
                 <text
                   key={item.key}
-                  x="14"
-                  y={43 + index * 19}
+                  x="16"
+                  y={50 + index * 23}
                   fill={curveLabels[item.type].color}
                 >
                   {curveLabels[item.type].label}: {item.value.toFixed(1)}{" "}
