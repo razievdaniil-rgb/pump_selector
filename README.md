@@ -1,203 +1,193 @@
-﻿# APGS Pump Selector
+# APGS Pump Selector
 
-Самостоятельный React-виджет программы подбора насосов для интеграции в 1С-Битрикс.
+React-виджет программы подбора насосов для последующего встраивания в 1С-Битрикс.
 
-## Что реализовано
+## Что уже работает
 
-- стартовые сценарии: по Q/H, по назначению, по модели;
-- простой путь «Котельная → горячая вода» и другие тестовые назначения;
-- выбор типа насоса и инженерных параметров;
-- Match Score, Verdict, причины рекомендаций и исключения;
-- сравнение до трёх моделей;
-- адаптивная Q-H визуализация и сквозной Context;
-- закреплённая кнопка подбора и автоматический переход к результатам;
-- адаптер для передачи Context и URL карточки из Bitrix.
+- начало подбора по Q/H, назначению или известной модели;
+- выбор типа насоса внутри основной формы;
+- проверка рабочей точки и вывод трёх вердиктов;
+- причины рекомендации и исключения;
+- Q-H график, сравнение до трёх моделей и сквозной Context;
+- адаптивная версия и закреплённая кнопка подбора;
+- переход в карточку по XML_ID через настраиваемый URL.
 
-Сейчас каталог и расчёты работают на моковых данных. Реальные товары, остатки, цены и кривые подключаются на этапе интеграции с API Bitrix.
+Сейчас товары и расчёты демонстрируются на тестовых данных из `src/domain/mockData.ts`. Живой поиск по каталогу, цены, остатки и числовые точки кривых появятся после подключения API.
 
-## Локальный запуск
+## Быстрый запуск на компьютере
 
-Требуется Node.js 20+.
+Понадобится Node.js 20 или новее.
+
+1. Откройте терминал в папке проекта.
+2. Установите зависимости:
+
+   ```bash
+   npm ci
+   ```
+
+3. Запустите проект:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Откройте адрес, который покажет Vite, обычно `http://localhost:5173/`.
+
+## Проверка и сборка
+
+Перед передачей выполните:
 
 ```bash
-npm ci
-npm run dev
-```
-
-Проверка перед передачей:
-
-```bash
-npm run build
 npm run lint
-```
-
-## Production-сборка
-
-```bash
-npm ci
 npm run build
 ```
 
-Готовые файлы появятся в каталоге `dist/`:
+После сборки папка `dist/` выглядит примерно так:
 
 ```text
 dist/
 ├── index.html
-├── apgs-pump-selector.css
-└── apgs-pump-selector.js
-```
-
-Для Bitrix нужны `apgs-pump-selector.css`, `apgs-pump-selector.js` и изображение насоса из `public/pump.png`.
-
-## Развёртывание в 1С-Битрикс
-
-Ниже приведён вариант интеграции как React-виджета в существующий шаблон Bitrix. Изменять ядро Bitrix не требуется.
-
-### 1. Скопировать собранные файлы
-
-Создайте каталог в активном шаблоне сайта:
-
-```text
-/local/templates/<имя_шаблона>/assets/apgs-pump-selector/
-```
-
-Скопируйте туда:
-
-```text
-apgs-pump-selector.css
-apgs-pump-selector.js
-pump.png
-```
-
-Рекомендуемая итоговая структура:
-
-```text
-/local/templates/<имя_шаблона>/assets/apgs-pump-selector/
-├── apgs-pump-selector.css
-├── apgs-pump-selector.js
+├── apgs-pump-selector.<hash>.css
+├── apgs-pump-selector.<hash>.js
 └── pump.png
 ```
 
-### 2. Создать страницу подборщика
+`<hash>` меняется при каждой новой сборке. Точные имена CSS и JS нужно брать из созданного `dist/index.html`.
 
-Например, файл `/pumpselect/index.php`:
+## Простая установка в Bitrix
+
+### Шаг 1. Соберите проект
+
+```bash
+npm ci
+npm run build
+```
+
+### Шаг 2. Скопируйте готовые файлы
+
+Создайте папку:
+
+```text
+/local/templates/<имя_шаблона>/assets/apgs-pump-selector/
+```
+
+Скопируйте туда из `dist/`:
+
+- файл `apgs-pump-selector.<hash>.css`;
+- файл `apgs-pump-selector.<hash>.js`;
+- `pump.png`.
+
+Не переименовывайте только один файл: имена в HTML должны совпадать с реальными именами после сборки.
+
+### Шаг 3. Создайте страницу `/pumpselect/`
+
+Пример `/pumpselect/index.php`:
 
 ```php
 <?php
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetTitle('Программа подбора насосов');
 
-$templatePath = SITE_TEMPLATE_PATH.'/assets/apgs-pump-selector';
+$widgetUrl = SITE_TEMPLATE_PATH.'/assets/apgs-pump-selector';
 ?>
 
 <div id="apgs-pump-selector"></div>
 
 <script>
 window.APGSPumpSelectorData = {
+  assetsBase: '<?=CUtil::JSEscape($widgetUrl)?>',
   context: {},
   endpoints: {
-    search: '/local/api/pumps/search.php',
     product: '/catalog/pumps/{xmlId}/'
   }
 };
 </script>
 
-<link rel="stylesheet" href="<?=htmlspecialcharsbx($templatePath)?>/apgs-pump-selector.css?v=1">
-<script type="module" src="<?=htmlspecialcharsbx($templatePath)?>/apgs-pump-selector.js?v=1"></script>
+<link rel="stylesheet" href="<?=htmlspecialcharsbx($widgetUrl)?>/apgs-pump-selector.ВАШ_HASH.css">
+<script type="module" src="<?=htmlspecialcharsbx($widgetUrl)?>/apgs-pump-selector.ВАШ_HASH.js"></script>
 
 <?php require($_SERVER['DOCUMENT_ROOT'].'/bitrix/footer.php'); ?>
 ```
 
-Виджет ищет контейнер `#apgs-pump-selector`. Для изолированной страницы также поддерживается `#root`, но в Bitrix рекомендуется использовать отдельный ID.
+Замените `ВАШ_HASH` на значение из текущей папки `dist/`.
 
-### 3. Подключение через Asset API Bitrix
+Важно:
 
-Если скрипты принято подключать из шаблона или компонента, используйте Asset API:
+- настройки `window.APGSPumpSelectorData` должны находиться выше подключения JavaScript;
+- JavaScript подключается с `type="module"`;
+- `assetsBase` нужен, чтобы изображения загружались из папки шаблона;
+- ядро Bitrix изменять не требуется.
 
-```php
-<?php
-use Bitrix\Main\Page\Asset;
-
-$assetPath = SITE_TEMPLATE_PATH.'/assets/apgs-pump-selector';
-Asset::getInstance()->addCss($assetPath.'/apgs-pump-selector.css');
-Asset::getInstance()->addJs($assetPath.'/apgs-pump-selector.js');
-?>
-
-<div id="apgs-pump-selector"></div>
-```
-
-Важно: production-файл является ES-модулем. Если текущий Asset API выводит обычный `<script>` без `type="module"`, JavaScript лучше подключить вручную, как в предыдущем примере.
-
-### 4. Передать настройки из Bitrix
-
-Настройки должны быть объявлены до подключения `apgs-pump-selector.js`:
-
-```html
-<script>
-window.APGSPumpSelectorData = {
-  context: {
-    q: 32.4,
-    h: 48.5,
-    fluid: 'Вода чистая',
-    temperature: 20,
-    density: 998,
-    viscosity: 1,
-    dn: 'DN50 / DN50',
-    pn: 'PN16'
-  },
-  endpoints: {
-    search: '/local/api/pumps/search.php',
-    product: '/catalog/pumps/{xmlId}/'
-  }
-};
-</script>
-```
-
-`context` необязателен. Если пользователь пришёл без Q/H, можно передать пустой объект.
-
-`product` — шаблон URL карточки товара. Перед переходом `{xmlId}` заменяется на XML_ID выбранной модели, например `RFZ-026347`.
-
-### 5. Связать переход с карточкой
-
-Перед открытием карточки виджет генерирует событие `apgs:open-product`:
+### Шаг 4. Укажите настоящий URL карточки
 
 ```js
-window.addEventListener('apgs:open-product', (event) => {
+endpoints: {
+  product: '/catalog/pumps/{xmlId}/'
+}
+```
+
+При клике `{xmlId}` заменится на XML_ID товара, например `RFZ-026347`.
+
+Если структура URL на сайте другая, измените только этот шаблон.
+
+### Шаг 5. При необходимости передайте исходный Context
+
+```js
+context: {
+  q: 32.4,
+  h: 48.5,
+  pumpType: 'Центробежный In-Line',
+  fluid: 'Вода чистая',
+  temperature: 20,
+  density: 998,
+  viscosity: 1,
+  dn: 'DN50 / DN50',
+  pn: 'PN16',
+  material: 'Чугун',
+  seal: 'Механическое уплотнение'
+}
+```
+
+Context необязателен. При пустом объекте пользователь начнёт новый подбор.
+
+## Как виджет передаёт выбор в карточку
+
+Перед переходом виджет:
+
+1. сохраняет Context в `localStorage` под ключом `apgs-selection-context`;
+2. сохраняет выбранный товар под ключом `apgs-selected-pump`;
+3. отправляет событие `apgs:open-product`;
+4. открывает URL из `endpoints.product`.
+
+Событие можно перехватить:
+
+```js
+window.addEventListener('apgs:open-product', event => {
   const { productId, context } = event.detail;
   console.log(productId, context);
 });
 ```
 
-Это позволяет Bitrix-разработчику:
+## Что требуется для живых данных
 
-- сформировать собственный URL карточки;
-- сохранить Q/H Context в сессии;
-- передать параметры в карточку через query string;
-- отправить событие в аналитику.
+Текущая сборка готова к размещению как интерфейс, но пока работает на моках. Для production-интеграции нужны:
 
-Context также сохраняется в `localStorage` под ключом `apgs-selection-context`.
+1. API поиска товаров или серверная передача каталога из Bitrix;
+2. реальные поля товара: XML_ID, название, артикул, тип, Q/H, мощность, КПД, DN/PN и другие характеристики;
+3. числовые точки кривых;
+4. реальные URL карточек;
+5. обработка загрузки, пустого ответа и ошибки API.
 
-### 6. Подключить реальные данные
+Рекомендуемая точка подключения API — `src/services/bitrixSelectorAdapter.ts`. Поле `endpoints.search` зарезервировано в настройках, но автоматический HTTP-запрос к нему ещё не реализован.
 
-Сейчас источник данных находится в:
-
-```text
-src/domain/mockData.ts
-```
-
-Для production необходимо заменить моковый каталог вызовом API. Рекомендуемая точка подключения:
-
-```text
-src/services/bitrixSelectorAdapter.ts
-```
-
-Минимально API поиска должно возвращать для каждой модели:
+Минимальная структура товара:
 
 ```json
 {
   "id": "RFZ-026347",
   "name": "APGS-InLine 50-200/5.5",
   "article": "APGS-IL-50200-55",
+  "pumpType": "Центробежный In-Line",
   "power": 5.5,
   "efficiency": 78.2,
   "dn": "DN50 / PN16",
@@ -208,56 +198,47 @@ src/services/bitrixSelectorAdapter.ts
 }
 ```
 
-Идентификатор товара — `XML_ID` формата `RFZ-XXXXXX`.
+Идентификатор `id` должен соответствовать XML_ID формата `RFZ-XXXXXX`.
 
-### 7. Подключить кривые насосов
+## Формат инженерных кривых
 
-В Bitrix используется свойство `PMP_CURVES_JSON`. Сейчас оно содержит идентификаторы кривых вида:
-
-```text
-curve-RFZ-026347-QH-v1
-```
-
-Поддерживаемые типы:
+В Bitrix используется свойство `PMP_CURVES_JSON`. Сейчас там находятся ID кривых вида `curve-RFZ-026347-QH-v1`; числовые точки будут переданы отдельно на этапе интеграции.
 
 - `QH`: точки `q`, `h`;
 - `EFF`: точки `q`, `eff`;
 - `POWER`: точки `q`, `power`;
 - `NPSH`: точки `q`, `npsh`.
 
-Единицы измерения:
+Единицы:
 
-- `units.x`: `m3/h`;
-- QH и NPSH: `m`;
-- EFF: `%`;
-- POWER: `kW`.
+- `units.x` — `m3/h`;
+- `QH` и `NPSH` — `m`;
+- `EFF` — `%`;
+- `POWER` — `kW`.
 
-Связь выполняется по `product_id`, который равен XML_ID товара. BEP рассчитывается на фронтенде как точка максимального значения кривой EFF.
+Кривые связываются с товаром по `product_id = XML_ID`. BEP рассчитывается на фронтенде как точка максимального значения кривой EFF.
 
-### 8. Очистить кеш Bitrix
+## После обновления файлов
 
-После замены CSS или JavaScript:
+1. Скопируйте новые файлы из `dist/`.
+2. Обновите их имена в `/pumpselect/index.php`.
+3. Очистите управляемый кеш и кеш композита Bitrix.
+4. Откройте страницу в приватном окне.
 
-1. увеличьте параметр версии в URL, например `?v=2`;
-2. очистите управляемый кеш Bitrix;
-3. при необходимости очистите кеш композита;
-4. проверьте страницу в приватном окне браузера.
+## Чеклист после установки
 
-### 9. Чеклист после интеграции
-
-- страница открывается без ошибок в Console;
-- CSS и JavaScript возвращают HTTP 200;
+- CSS, JS и `pump.png` возвращают HTTP 200;
+- в Console нет ошибок;
 - интерфейс корректен на 360, 390, 768, 1280 и 1440 px;
-- подбор пересчитывается после изменения Q/H;
-- кнопка «Подобрать насос» доступна при прокрутке;
-- выбранный Context сохраняется при переходе в карточку;
-- переход строится по XML_ID выбранного товара;
-- причины исключения показываются для неподходящих моделей;
-- сравнение сохраняет не более трёх моделей;
-- API корректно обрабатывает пустой результат и ошибку запроса.
+- Q/H очищаются и вводятся без ведущего нуля;
+- при нулевом Q/H кнопка подбора заблокирована;
+- выбор типа насоса влияет на результаты;
+- закреплённая панель не перекрывает контент;
+- переход в карточку строится по XML_ID;
+- Context сохраняется при переходе;
+- сравнение принимает не более трёх моделей;
+- неподходящие модели показывают конкретную причину.
 
-## GitHub Pages
-
-Демо автоматически публикуется после push в ветку `main`:
+## Демо
 
 https://razievdaniil-rgb.github.io/pump_selector/
