@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+﻿import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -9,8 +9,8 @@ export default defineConfig({
     cssCodeSplit: false,
     rollupOptions: {
       output: {
-        entryFileNames: 'apgs-pump-selector.js',
-        assetFileNames: 'apgs-pump-selector.[ext]',
+        entryFileNames: 'apgs-pump-selector.[hash].js',
+        assetFileNames: 'apgs-pump-selector.[hash].[ext]',
       },
     },
   },
