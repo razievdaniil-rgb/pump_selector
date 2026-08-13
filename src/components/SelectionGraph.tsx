@@ -1,29 +1,38 @@
-import { useState } from "react";
 import type { PumpResult, SelectionContext } from "../domain/types";
-import { MultiCurveChart } from "./MultiCurveChart";
+import { CurveWorkspace } from "./CurveWorkspace";
 
 export function SelectionGraph({
   context,
   items,
-  onOpen,
+  onContextChange,
 }: {
   context: SelectionContext;
   items: PumpResult[];
-  onOpen: () => void;
+  onContextChange: (context: SelectionContext) => void;
 }) {
-  const pumps = items.filter((item) => item.level !== "excluded").slice(0, 3);
-  const [layers, setLayers] = useState(["qh", "eff", "npsh", "power"]);
-  const hasCurves = pumps.length > 0;
-
+  const hasCurves = items.some((item) => item.level !== "excluded");
+  if (!hasCurves) {
+    return (
+      <section className="selection-graph card">
+        <div className="graph-empty" role="status">
+          <strong>Нет подходящих кривых для этой рабочей точки</strong>
+          <span>
+            Измените Q/H или тип насоса — график обновится вместе с
+            результатами.
+          </span>
+        </div>
+      </section>
+    );
+  }
   return (
-    <section className="selection-graph card">
-      <div className="graph-heading">
+    <section className="selection-graph unified-selection-graph">
+      <div className="graph-heading card">
         <div>
           <span className="graph-eyebrow">Подбор по рабочей точке</span>
-          <h2>Q-H кривые подходящих насосов</h2>
+          <h2>Характеристики подходящих насосов</h2>
           <p>
-            Сравниваем точку Q {context.q} м³/ч · H {context.h} м с рабочими
-            диапазонами выбранного типа.
+            Один график для Q‑H, КПД, NPSH и мощности. Выберите показатель
+            вкладкой и при необходимости раскройте инженерные настройки.
           </p>
         </div>
         <div className="duty-badge">
@@ -32,50 +41,11 @@ export function SelectionGraph({
           <i>H {context.h}</i>
         </div>
       </div>
-
-      {hasCurves ? (
-        <>
-          <div className="curve-tabs">
-            <div className="live-curve-tabs">
-              {[
-                ["qh", "Q-H"],
-                ["eff", "КПД"],
-                ["npsh", "NPSH"],
-                ["power", "P2"],
-              ].map(([id, label]) => (
-                <button
-                  key={id}
-                  aria-pressed={layers.includes(id)}
-                  className={layers.includes(id) ? `active layer-${id}` : ""}
-                  onClick={() =>
-                    setLayers((current) =>
-                      current.includes(id)
-                        ? current.length === 1
-                          ? current
-                          : current.filter((item) => item !== id)
-                        : [...current, id],
-                    )
-                  }
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <MultiCurveChart context={context} pumps={pumps} layers={layers} />
-          <button className="open-curve-workspace" onClick={onOpen}>
-            Открыть детальный экран кривых →
-          </button>
-        </>
-      ) : (
-        <div className="graph-empty" role="status">
-          <strong>Нет подходящих кривых для этой рабочей точки</strong>
-          <span>
-            Измените Q/H или тип насоса — график обновится вместе с
-            результатами.
-          </span>
-        </div>
-      )}
+      <CurveWorkspace
+        context={context}
+        items={items}
+        onContextChange={onContextChange}
+      />
     </section>
   );
 }

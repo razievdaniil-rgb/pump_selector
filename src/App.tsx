@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Header, type HeaderAction } from "./components/Header";
-import { CurveWorkspace } from "./components/CurveWorkspace";
 import { ModelSearchStep } from "./components/ModelSearchStep";
 import { PurposeStep } from "./components/PurposeStep";
 import { ResultsPanel } from "./components/ResultsPanel";
@@ -193,7 +192,6 @@ export default function App() {
     }
     setDialog(value);
   }
-  const backFromCurves = () => setScreen("results");
   const showDetails = (pump: PumpResult) => {
       setDetails(pump);
       setDialog("details");
@@ -230,21 +228,6 @@ export default function App() {
           onOpen={openCard}
         />
       )}{" "}
-      {screen === "curves" && (
-        <CurveWorkspace
-          context={context}
-          items={items}
-          onBack={backFromCurves}
-          onContextChange={(next) => {
-            setContext(next);
-            setDraft(next);
-            localStorage.setItem(
-              "apgs-selection-context",
-              JSON.stringify(next),
-            );
-          }}
-        />
-      )}
       {working && (
         <>
           <div className="steps">
@@ -270,7 +253,14 @@ export default function App() {
               <SelectionGraph
                 context={context}
                 items={items}
-                onOpen={() => setScreen("curves")}
+                onContextChange={(next) => {
+                  setContext(next);
+                  setDraft(next);
+                  localStorage.setItem(
+                    "apgs-selection-context",
+                    JSON.stringify(next),
+                  );
+                }}
               />
               <ResultsPanel
                 items={items}

@@ -19,12 +19,10 @@ type DutyPoint = { id: string; q: number; h: number; label: string };
 export function CurveWorkspace({
   context,
   items,
-  onBack,
   onContextChange,
 }: {
   context: SelectionContext;
   items: PumpResult[];
-  onBack: () => void;
   onContextChange: (context: SelectionContext) => void;
 }) {
   const candidates = items
@@ -33,14 +31,8 @@ export function CurveWorkspace({
   const [visible, setVisible] = useState<string[]>(
     candidates[0] ? [candidates[0].id] : [],
   );
-  const [layers, setLayers] = useState<CurveKey[]>([
-    "qh",
-    "eff",
-    "npsh",
-    "power",
-  ]);
+  const [activeLayer, setActiveLayer] = useState<CurveKey>("qh");
   const [showZone, setShowZone] = useState(true);
-  const [layout, setLayout] = useState<"combined" | "split">("combined");
   const [pointer, setPointer] = useState(true);
   const [panel, setPanel] = useState<ToolPanel>(null);
   const [frequency, setFrequency] = useState(50);
@@ -106,45 +98,19 @@ export function CurveWorkspace({
       ? interpolate(primaryNpsh.points, activePoint.q)
       : 0;
   const npshReserve = npsha - npshrAtPoint;
-  const toggleLayer = (key: CurveKey) =>
-    setLayers((current) =>
-      current.includes(key)
-        ? current.length === 1
-          ? current
-          : current.filter((item) => item !== key)
-        : [...current, key],
-    );
+
   const openPanel = (value: ToolPanel) =>
     setPanel((current) => (current === value ? null : value));
 
   return (
-    <main className="curve-workspace">
-      <header className="curve-screen-header">
-        <button className="back-link" onClick={onBack}>
-          <Icon name="back" size={17} />К результатам подбора
-        </button>
-        <div>
-          <span className="graph-eyebrow">Инженерные характеристики</span>
-          <h1>Кривые и рабочая точка</h1>
-          <p>
-            {context.pumpType} · {context.fluid} · {context.temperature} °C
-          </p>
-        </div>
-        <button
-          className="button ghost curve-fullscreen"
-          onClick={() => chartRef.current?.requestFullscreen?.()}
-        >
-          ⛶ На весь экран
-        </button>
-      </header>
-
+    <section className="curve-workspace inline-curve-workspace">
       <section className="curve-toolbar card">
         <div className="curve-mode-tabs">
           {(Object.keys(curveLabels) as CurveKey[]).map((key) => (
             <button
               key={key}
-              className={layers.includes(key) ? "active" : ""}
-              onClick={() => toggleLayer(key)}
+              className={activeLayer === key ? "active" : ""}
+              onClick={() => setActiveLayer(key)}
             >
               <i style={{ background: curveLabels[key].color }} />
               {curveLabels[key].label}
@@ -160,26 +126,18 @@ export function CurveWorkspace({
         </div>
         <div className="chart-view-tools">
           <button
+            className="curve-fullscreen-inline"
+            onClick={() => chartRef.current?.requestFullscreen?.()}
+          >
+            ⛶ На весь экран
+          </button>
+          <button
             className={pointer ? "active" : ""}
             onClick={() => setPointer((value) => !value)}
             title="Показывать значения в любой точке кривой"
           >
             ⌖ Указка
           </button>
-          <div className="segmented">
-            <button
-              className={layout === "combined" ? "active" : ""}
-              onClick={() => setLayout("combined")}
-            >
-              Вместе
-            </button>
-            <button
-              className={layout === "split" ? "active" : ""}
-              onClick={() => setLayout("split")}
-            >
-              Отдельно
-            </button>
-          </div>
         </div>
       </section>
 
@@ -605,40 +563,16 @@ export function CurveWorkspace({
             </span>
           </div>
         </div>
-        {layout === "combined" ? (
-          <EngineeringChart
-            series={series}
-            layers={layers}
-            dutyPoints={dutyPoints}
-            staticHead={staticHead}
-            bep={bep}
-            showZone={showZone}
-            pointer={pointer}
-            npsha={npsha}
-          />
-        ) : (
-          <div className="split-charts">
-            {layers.map((layer) => (
-              <div key={layer} className="split-chart">
-                <h3>
-                  {curveLabels[layer].label}{" "}
-                  <span>{curveLabels[layer].unit}</span>
-                </h3>
-                <EngineeringChart
-                  compact
-                  series={series}
-                  layers={[layer]}
-                  dutyPoints={layer === "qh" ? dutyPoints : []}
-                  staticHead={staticHead}
-                  bep={bep}
-                  showZone={showZone}
-                  pointer={pointer}
-                  npsha={npsha}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <EngineeringChart
+          series={series}
+          layers={[activeLayer]}
+          dutyPoints={activeLayer === "qh" ? dutyPoints : []}
+          staticHead={staticHead}
+          bep={bep}
+          showZone={showZone}
+          pointer={pointer}
+          npsha={npsha}
+        />
       </section>
 
       <section className="curve-values card">
@@ -680,6 +614,6 @@ export function CurveWorkspace({
           </small>
         </div>
       </section>
-    </main>
+    </section>
   );
 }

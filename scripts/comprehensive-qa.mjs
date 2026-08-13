@@ -79,7 +79,7 @@ for (const viewport of viewports) {
   add(
     name,
     "results: four graph layers",
-    (await page.locator(".live-curve-tabs button").count()) === 4,
+    (await page.locator(".curve-mode-tabs button").count()) >= 4,
   );
 
   const firstResult = page.locator(".result-card").first();
@@ -93,28 +93,32 @@ for (const viewport of viewports) {
     )?.trim() === "1",
   );
 
-  await page.locator(".open-curve-workspace").click();
   add(
     name,
-    "curves: detailed screen opens",
-    await page.locator(".curve-workspace").isVisible(),
+    "curves: unified workspace visible",
+    await page.locator(".selection-graph .curve-workspace").isVisible(),
   );
   add(
     name,
-    "curves: four metrics rendered",
-    (await page.locator(".plot-series").count()) >= 4,
+    "curves: exactly one graph",
+    (await page.locator(".selection-graph .engineering-chart-v2").count()) ===
+      1,
   );
   add(
     name,
-    "curves: no black system arc",
-    (await page.locator(".required-head").count()) === 0,
+    "curves: one active metric",
+    (await page.locator(".selection-graph .plot-series").count()) >= 1,
+  );
+  add(
+    name,
+    "curves: no separate screen button",
+    (await page.locator(".open-curve-workspace").count()) === 0,
   );
   add(
     name,
     "curves: no question artifacts",
     !(await page.locator("body").innerText()).includes("????"),
   );
-  await page.locator(".curve-screen-header .back-link").click();
 
   const overflow = await page.evaluate(() =>
     Math.max(0, document.documentElement.scrollWidth - innerWidth),

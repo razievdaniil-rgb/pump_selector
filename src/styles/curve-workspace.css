@@ -981,3 +981,62 @@
   stroke-width: 1.2;
   pointer-events: none;
 }
+
+/* Unified graph inside the results page */
+.unified-selection-graph {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.unified-selection-graph > .graph-heading {
+  margin-bottom: 10px;
+  padding: 16px;
+}
+.inline-curve-workspace {
+  max-width: none;
+  padding: 0;
+}
+.inline-curve-workspace .curve-toolbar {
+  position: static;
+  margin: 0;
+}
+.inline-curve-workspace .curve-actions,
+.inline-curve-workspace .curve-config-panel,
+.inline-curve-workspace .curve-models,
+.inline-curve-workspace .curve-canvas,
+.inline-curve-workspace .curve-values {
+  margin-top: 10px;
+}
+.inline-curve-workspace .curve-models {
+  grid-template-columns: minmax(160px, auto) repeat(3, minmax(0, 1fr));
+}
+.curve-fullscreen-inline {
+  white-space: nowrap;
+}
+@media (max-width: 1050px) {
+  .inline-curve-workspace .curve-models {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .inline-curve-workspace .curve-models > .panel-title,
+  .inline-curve-workspace .curve-hint {
+    grid-column: 1/-1;
+  }
+}
+@media (max-width: 760px) {
+  .unified-selection-graph > .graph-heading {
+    padding: 13px;
+  }
+  .inline-curve-workspace .curve-models {
+    display: block;
+  }
+  .curve-fullscreen-inline {
+    display: none;
+  }
+  .inline-curve-workspace .curve-toolbar {
+    gap: 10px;
+  }
+  .inline-curve-workspace .curve-actions {
+    margin-top: 8px;
+  }
+}
