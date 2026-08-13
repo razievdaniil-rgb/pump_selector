@@ -1,16 +1,15 @@
-﻿import type { PumpResult, PurposePreset, SelectionContext } from './types';
+import type { PumpResult,PurposePreset,SelectionContext } from './types';
 export const initialContext:SelectionContext={q:32.4,h:48.5,pumpType:'Центробежный In-Line',fluid:'Вода чистая',temperature:20,density:998,viscosity:1,dn:'DN50 / DN50',pn:'PN16',material:'Чугун',seal:'Механическое уплотнение'};
 export const pumpTypes=[['Центробежный In-Line','Для циркуляционных систем'],['Консольный','Для технологических линий'],['Погружной','Для скважин и резервуаров'],['Канализационный','Для загрязнённых сред'],['Многоступенчатый','Для высокого напора'],['Дозировочный','Для точной подачи']];
-export const purposePresets:PurposePreset[]=[
-{id:'boiler-hot-water',object:'Котельная',medium:'Горячая вода',label:'Циркуляция горячей воды',description:'Контуры котельной, отопления и ГВС',context:{pumpType:'Центробежный In-Line',fluid:'Вода чистая',temperature:90,material:'Чугун',seal:'Механическое уплотнение'}},
-{id:'water-supply',object:'Водоснабжение',medium:'Чистая вода',label:'Повышение давления',description:'Подача воды и поддержание давления',context:{pumpType:'Многоступенчатый',fluid:'Вода чистая',temperature:20,material:'Нержавеющая сталь'}},
-{id:'drainage',object:'Дренаж',medium:'Загрязнённая вода',label:'Откачка воды',description:'Приямки, резервуары и технические стоки',context:{pumpType:'Погружной',fluid:'Вода техническая',temperature:20}},
-{id:'sewage',object:'Канализация',medium:'Сточные воды',label:'Перекачка стоков',description:'Хозяйственные и производственные стоки',context:{pumpType:'Канализационный',fluid:'Вода техническая',temperature:40}}
-];
+export const purposePresets:PurposePreset[]=[{id:'boiler-hot-water',object:'Котельная',medium:'Горячая вода',label:'Циркуляция горячей воды',description:'Контуры котельной, отопления и ГВС',context:{pumpType:'Центробежный In-Line',fluid:'Вода чистая',temperature:90}},{id:'water-supply',object:'Водоснабжение',medium:'Чистая вода',label:'Повышение давления',description:'Подача воды и поддержание давления',context:{pumpType:'Многоступенчатый',fluid:'Вода чистая'}},{id:'drainage',object:'Дренаж',medium:'Загрязнённая вода',label:'Откачка воды',description:'Приямки и резервуары',context:{pumpType:'Погружной',fluid:'Вода техническая'}},{id:'sewage',object:'Канализация',medium:'Сточные воды',label:'Перекачка стоков',description:'Хозяйственные и производственные стоки',context:{pumpType:'Канализационный',fluid:'Вода техническая'}}];
 export const results:PumpResult[]=[
-{id:'RFZ-026347',name:'APGS-InLine 50-200/5.5',article:'APGS-IL-50200-55',score:97,level:'recommended',minQ:12,minH:18,maxQ:80,maxH:72,power:5.5,efficiency:78.2,dn:'DN50 / PN16',reasons:[]},
-{id:'RFZ-026351',name:'APGS-InLine 50-160/4.0',article:'APGS-IL-50160-40',score:87,level:'suitable',minQ:10,minH:15,maxQ:60,maxH:58,power:4,efficiency:74,dn:'DN50 / PN16',reasons:[]},
-{id:'RFZ-026359',name:'APGS-InLine 50-250/7.5',article:'APGS-IL-50250-75',score:78,level:'possible',minQ:16,minH:25,maxQ:90,maxH:90,power:7.5,efficiency:76,dn:'DN50 / PN16',reasons:[]},
-{id:'RFZ-026401',name:'APGS-InLine 40-200/3.0',article:'APGS-IL-40200-30',score:72,level:'possible',minQ:8,minH:16,maxQ:50,maxH:72,power:3,efficiency:69,dn:'DN40 / PN16',reasons:[]},
-{id:'RFZ-026410',name:'APGS-InLine 32-125/1.5',article:'APGS-IL-32125-15',score:20,level:'excluded',minQ:4,minH:8,maxQ:25,maxH:35,power:1.5,efficiency:61,dn:'DN32 / PN16',reasons:[]}
+{id:'RFZ-026347',name:'APGS-InLine 50-200/5.5',article:'APGS-IL-50200-55',pumpType:'Центробежный In-Line',score:97,level:'recommended',minQ:12,minH:18,maxQ:80,maxH:72,power:5.5,efficiency:78.2,dn:'DN50 / PN16',reasons:[]},
+{id:'RFZ-026351',name:'APGS-InLine 50-160/4.0',article:'APGS-IL-50160-40',pumpType:'Центробежный In-Line',score:87,level:'suitable',minQ:10,minH:15,maxQ:60,maxH:58,power:4,efficiency:74,dn:'DN50 / PN16',reasons:[]},
+{id:'RFZ-026359',name:'APGS-InLine 50-250/7.5',article:'APGS-IL-50250-75',pumpType:'Центробежный In-Line',score:78,level:'possible',minQ:16,minH:25,maxQ:90,maxH:90,power:7.5,efficiency:76,dn:'DN50 / PN16',reasons:[]},
+{id:'RFZ-026401',name:'APGS-Console 50-200/7.5',article:'APGS-C-50200-75',pumpType:'Консольный',score:84,level:'suitable',minQ:8,minH:16,maxQ:70,maxH:75,power:7.5,efficiency:72,dn:'DN50 / PN16',reasons:[]},
+{id:'RFZ-026402',name:'APGS-Sub 50-18/5.5',article:'APGS-SUB-5018-55',pumpType:'Погружной',score:88,level:'suitable',minQ:10,minH:8,maxQ:70,maxH:55,power:5.5,efficiency:70,dn:'DN50 / PN16',reasons:[]},
+{id:'RFZ-026403',name:'APGS-WQ 65-25/7.5',article:'APGS-WQ-6525-75',pumpType:'Канализационный',score:86,level:'suitable',minQ:12,minH:10,maxQ:80,maxH:62,power:7.5,efficiency:68,dn:'DN65 / PN16',reasons:[]},
+{id:'RFZ-026404',name:'APGS-MV 50-6/7.5',article:'APGS-MV-506-75',pumpType:'Многоступенчатый',score:91,level:'recommended',minQ:8,minH:25,maxQ:65,maxH:110,power:7.5,efficiency:76,dn:'DN50 / PN25',reasons:[]},
+{id:'RFZ-026405',name:'APGS-Dose 32-50/1.5',article:'APGS-D-3250-15',pumpType:'Дозировочный',score:81,level:'suitable',minQ:1,minH:10,maxQ:35,maxH:80,power:1.5,efficiency:64,dn:'DN32 / PN16',reasons:[]},
+{id:'RFZ-026410',name:'APGS-InLine 32-125/1.5',article:'APGS-IL-32125-15',pumpType:'Центробежный In-Line',score:20,level:'excluded',minQ:4,minH:8,maxQ:25,maxH:35,power:1.5,efficiency:61,dn:'DN32 / PN16',reasons:[]}
 ];
