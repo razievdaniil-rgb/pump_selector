@@ -8,3 +8,5 @@
 .form-field.invalid>div{border-color:var(--red);background:#fff8f7}.field-error{margin:7px 0 0;color:var(--red);font-size:10px;font-weight:600}.button:disabled,.selection-dock button:disabled{cursor:not-allowed;opacity:.45}.rail-link{justify-self:end;border:0;background:transparent;color:var(--blue);font-size:11px;font-weight:650}.curve-0{stroke:var(--blue)}.curve-1{stroke:#6f98f3}.curve-2{stroke:#9ab6f1}.status.possible{color:var(--amber)}
 
 .selection-dock .dock-restart{height:38px;padding:0 12px;border:0;background:transparent;color:var(--blue);font-size:11px;font-weight:650}.selection-dock .dock-submit{height:42px;padding:0 24px;border:0;border-radius:8px;background:var(--black);color:#fff;font-weight:750}@media(max-width:560px){.selection-dock .dock-restart{padding:0 6px;font-size:10px}.selection-dock .dock-submit{padding:0 13px}}
+
+.scenario{transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease}.scenario:hover,.scenario:focus-visible{border-color:var(--blue);background:#fbfdff;box-shadow:0 6px 18px rgba(47,111,237,.08)}
