@@ -31,7 +31,13 @@ export function CurveWorkspace({
   const [visible, setVisible] = useState<string[]>(
     candidates[0] ? [candidates[0].id] : [],
   );
-  const [activeLayer, setActiveLayer] = useState<CurveKey>("qh");
+  const [layers, setLayers] = useState<CurveKey[]>([
+    "qh",
+    "eff",
+    "npsh",
+    "power",
+  ]);
+  const [layout, setLayout] = useState<"combined" | "split">("combined");
   const [showZone, setShowZone] = useState(true);
   const [pointer, setPointer] = useState(true);
   const [panel, setPanel] = useState<ToolPanel>(null);
@@ -58,17 +64,65 @@ export function CurveWorkspace({
     () => candidates.filter((pump) => visible.includes(pump.id)),
     [candidates, visible],
   );
-  const series = useMemo(
-    () =>
-      buildCurveSeries(selected, ["qh", "eff", "npsh", "power"], {
+  const series = useMemo(() => {
+    const adjusted = buildCurveSeries(
+      selected,
+      ["qh", "eff", "npsh", "power"],
+      {
         frequency,
         impellerPercent,
         viscosity,
         density,
         parallel,
-      }),
-    [selected, frequency, impellerPercent, viscosity, density, parallel],
-  );
+      },
+    ).map((item) =>
+      item.type === "qh" && parallel > 1
+        ? { ...item, label: `${item.label} · ${parallel} насоса` }
+        : item,
+    );
+    const scenarios = [];
+    if (parallel > 1) {
+      scenarios.push(
+        ...buildCurveSeries(selected, ["qh"], {
+          frequency,
+          impellerPercent,
+          viscosity,
+          density,
+          parallel: 1,
+        }).map((item) => ({
+          ...item,
+          key: `${item.key}-single`,
+          label: `${item.label} · 1 насос`,
+          dashed: true,
+        })),
+      );
+    }
+    if (reserve > 0) {
+      scenarios.push(
+        ...buildCurveSeries(selected, ["qh"], {
+          frequency,
+          impellerPercent,
+          viscosity,
+          density,
+          parallel: parallel + reserve,
+        }).map((item) => ({
+          ...item,
+          key: `${item.key}-reserve`,
+          label: `${item.label} · резервный сценарий ${parallel + reserve}`,
+          dashed: true,
+        })),
+      );
+    }
+    return [...adjusted, ...scenarios];
+  }, [
+    selected,
+    frequency,
+    impellerPercent,
+    viscosity,
+    density,
+    parallel,
+    reserve,
+  ]);
   const primaryQh = series.find((item) => item.type === "qh");
   const primaryEff = series.find((item) => item.type === "eff");
   const primaryPower = series.find((item) => item.type === "power");
@@ -99,6 +153,15 @@ export function CurveWorkspace({
       : 0;
   const npshReserve = npsha - npshrAtPoint;
 
+  const toggleLayer = (key: CurveKey) =>
+    setLayers((current) =>
+      current.includes(key)
+        ? current.length === 1
+          ? current
+          : current.filter((item) => item !== key)
+        : [...current, key],
+    );
+
   const openPanel = (value: ToolPanel) =>
     setPanel((current) => (current === value ? null : value));
 
@@ -109,8 +172,9 @@ export function CurveWorkspace({
           {(Object.keys(curveLabels) as CurveKey[]).map((key) => (
             <button
               key={key}
-              className={activeLayer === key ? "active" : ""}
-              onClick={() => setActiveLayer(key)}
+              aria-pressed={layers.includes(key)}
+              className={layers.includes(key) ? "active" : ""}
+              onClick={() => toggleLayer(key)}
             >
               <i style={{ background: curveLabels[key].color }} />
               {curveLabels[key].label}
@@ -125,6 +189,23 @@ export function CurveWorkspace({
           </button>
         </div>
         <div className="chart-view-tools">
+          <div
+            className="segmented graph-layout-toggle"
+            aria-label="Расположение графиков"
+          >
+            <button
+              className={layout === "combined" ? "active" : ""}
+              onClick={() => setLayout("combined")}
+            >
+              Вместе
+            </button>
+            <button
+              className={layout === "split" ? "active" : ""}
+              onClick={() => setLayout("split")}
+            >
+              Отдельно
+            </button>
+          </div>
           <button
             className="curve-fullscreen-inline"
             onClick={() => chartRef.current?.requestFullscreen?.()}
@@ -563,16 +644,40 @@ export function CurveWorkspace({
             </span>
           </div>
         </div>
-        <EngineeringChart
-          series={series}
-          layers={[activeLayer]}
-          dutyPoints={activeLayer === "qh" ? dutyPoints : []}
-          staticHead={staticHead}
-          bep={bep}
-          showZone={showZone}
-          pointer={pointer}
-          npsha={npsha}
-        />
+        {layout === "combined" ? (
+          <EngineeringChart
+            series={series}
+            layers={layers}
+            dutyPoints={layers.includes("qh") ? dutyPoints : []}
+            staticHead={staticHead}
+            bep={bep}
+            showZone={showZone}
+            pointer={pointer}
+            npsha={npsha}
+          />
+        ) : (
+          <div className="split-charts">
+            {layers.map((layer) => (
+              <div className="split-chart" key={layer}>
+                <h3>
+                  {curveLabels[layer].label}{" "}
+                  <span>{curveLabels[layer].unit}</span>
+                </h3>
+                <EngineeringChart
+                  compact
+                  series={series}
+                  layers={[layer]}
+                  dutyPoints={layer === "qh" ? dutyPoints : []}
+                  staticHead={staticHead}
+                  bep={bep}
+                  showZone={showZone}
+                  pointer={pointer}
+                  npsha={npsha}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="curve-values card">

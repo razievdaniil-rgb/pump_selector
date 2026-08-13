@@ -71,6 +71,9 @@ export function EngineeringChart({
           `${index ? "L" : "M"}${x(point.q).toFixed(1)} ${y(point.value, type).toFixed(1)}`,
       )
       .join(" ");
+  const axisLayer: CurveKey = layers.includes("qh")
+    ? "qh"
+    : (layers[0] ?? "qh");
   const primaryQh = visible.find((item) => item.type === "qh");
   const systemPath =
     primaryQh && dutyPoints[0]
@@ -222,7 +225,7 @@ export function EngineeringChart({
         <g className="plot-axis">
           {Array.from({ length: 7 }, (_, index) => (
             <text
-              key={index}
+              key={`x-${index}`}
               x={P.left + (index * (W - P.left - P.right)) / 6}
               y={H - 25}
               textAnchor="middle"
@@ -230,12 +233,45 @@ export function EngineeringChart({
               {Math.round((index * maxima.q) / 6)}
             </text>
           ))}
+          {Array.from({ length: 6 }, (_, index) => (
+            <text
+              key={`y-${index}`}
+              x={P.left - 12}
+              y={P.top + (index * (H - P.top - P.bottom)) / 5 + 4}
+              textAnchor="end"
+            >
+              {((maxima[axisLayer] * (5 - index)) / 5).toFixed(
+                axisLayer === "npsh" || axisLayer === "power" ? 1 : 0,
+              )}
+            </text>
+          ))}
           <text x={W - P.right} y={H - 5} textAnchor="end">
             Q, м³/ч
           </text>
-          <text x="16" y="28">
-            Шкалы: H / КПД / NPSH / P2
+          <text
+            x={P.left}
+            y="24"
+            className="axis-primary"
+            fill={curveLabels[axisLayer].color}
+          >
+            {curveLabels[axisLayer].label}, {curveLabels[axisLayer].unit}
           </text>
+          {layers
+            .filter((layer) => layer !== axisLayer)
+            .map((layer, index) => (
+              <text
+                key={layer}
+                x={P.left + 165 + index * 165}
+                y="24"
+                fill={curveLabels[layer].color}
+              >
+                {curveLabels[layer].label}: 0–
+                {maxima[layer].toFixed(
+                  layer === "npsh" || layer === "power" ? 1 : 0,
+                )}{" "}
+                {curveLabels[layer].unit}
+              </text>
+            ))}
         </g>
         {cursor && (
           <g className="plot-cursor">
