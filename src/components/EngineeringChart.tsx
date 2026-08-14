@@ -1,4 +1,4 @@
-import { useMemo, useState, type MouseEvent } from "react";
+import { useId, useMemo, useState, type MouseEvent } from "react";
 import {
   curveLabels,
   interpolate,
@@ -38,6 +38,7 @@ export function EngineeringChart({
   compact?: boolean;
 }) {
   const [cursor, setCursor] = useState<{ q: number; x: number } | null>(null);
+  const clipId = "engineering-plot-clip-" + useId().replaceAll(":", "");
   const visible = series.filter((item) => layers.includes(item.type));
   const maxima = useMemo(() => {
     const rawQ = Math.max(
@@ -125,6 +126,16 @@ export function EngineeringChart({
         role="img"
         aria-label="Интерактивный график характеристик насоса"
       >
+        <defs>
+          <clipPath id={clipId}>
+            <rect
+              x={P.left}
+              y={P.top}
+              width={W - P.left - P.right}
+              height={H - P.top - P.bottom}
+            />
+          </clipPath>
+        </defs>
         <g className="plot-grid">
           {Array.from({ length: 7 }, (_, index) => (
             <line
@@ -169,7 +180,7 @@ export function EngineeringChart({
           </>
         )}
         {systemPath.length > 0 && (
-          <path className="plot-system" d={path(systemPath, "qh")} />
+          <path className="plot-system" d={path(systemPath, "qh")} clipPath={"url(#" + clipId + ")"} />
         )}
         {npsha !== undefined && layers.includes("npsh") && (
           <line
