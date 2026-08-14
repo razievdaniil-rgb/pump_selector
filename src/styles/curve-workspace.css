@@ -1394,10 +1394,10 @@
   }
 }
 /* Restore a compact supporting rail on wide desktop without shrinking the graph */
-@media (min-width: 1501px) {
+@media (min-width: 1401px) {
   .steps,
   .selector-grid {
-    grid-template-columns: 300px minmax(0, 1fr) 230px !important;
+    grid-template-columns: 260px minmax(0, 1fr) 200px !important;
   }
   .steps span:nth-child(3) {
     display: flex;
@@ -1407,7 +1407,7 @@
     display: flex !important;
     flex-direction: column;
     gap: 14px;
-    width: 230px;
+    width: 200px;
     min-width: 0;
   }
   .right-rail > .card {
@@ -1435,7 +1435,7 @@
   }
 }
 
-@media (max-width: 1500px) and (min-width: 901px) {
+@media (max-width: 1400px) and (min-width: 901px) {
   .steps,
   .selector-grid {
     grid-template-columns: 300px minmax(0, 1fr) !important;
@@ -1445,5 +1445,29 @@
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
+  }
+}
+@media (max-width: 1500px) and (min-width: 1401px) {
+  .inline-curve-workspace .curve-toolbar {
+    align-items: center;
+  }
+  .inline-curve-workspace .curve-mode-tabs button {
+    padding: 0 7px;
+    font-size: 9px;
+  }
+  .inline-curve-workspace .chart-view-tools > button,
+  .inline-curve-workspace .segmented button {
+    padding: 0 7px;
+    font-size: 9px;
+  }
+  .right-rail .panel-title {
+    align-items: start;
+    font-size: 12px;
+  }
+  .right-rail .rail-link {
+    font-size: 10px;
+  }
+  .right-rail .next > div {
+    gap: 7px;
   }
 }
