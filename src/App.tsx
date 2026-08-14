@@ -230,17 +230,6 @@ export default function App() {
       )}{" "}
       {working && (
         <>
-          <div className="steps">
-            <span className="active">
-              <i>1</i>Параметры и тип насоса
-            </span>
-            <span className={screen === "results" ? "active" : ""}>
-              <i>2</i>Кривые и результаты
-            </span>
-            <span>
-              <i>3</i>Выбор насоса
-            </span>
-          </div>
           <main className="selector-grid">
             <SelectionForm
               context={draft}
@@ -280,6 +269,7 @@ export default function App() {
               compared={compared}
               onRemove={toggle}
               onComparison={() => setDialog("comparison")}
+              onOpen={openCard}
               onPurpose={() => {
                 setAllowedPumpTypes(null);
                 setMode("purpose");
@@ -301,7 +291,7 @@ export default function App() {
             <button
               className="dock-submit"
               onClick={calculate}
-              disabled={draft.q <= 0 || draft.h <= 0}
+              disabled={draft.q <= 0 || draft.h <= 0 || !draft.dn}
             >
               Подобрать насос
             </button>
@@ -392,7 +382,7 @@ export default function App() {
             ) : dialog === "assistant" ? (
               <>
                 <p>
-                  Помощник уточнит назначение, среду и условия работы, затем
+                  ИИ-помощник только уточнит назначение, среду и исходные параметры. Инженерный расчёт выполняется алгоритмом; затем он
                   передаст параметры в подборщик.
                 </p>
                 <button

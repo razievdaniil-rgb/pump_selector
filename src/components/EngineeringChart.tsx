@@ -11,8 +11,8 @@ import {
 type DutyPoint = { id: string; q: number; h: number; label: string };
 
 const W = 1040;
-const H = 500;
-const P = { left: 70, right: 70, top: 42, bottom: 58 };
+const H = 390;
+const P = { left: 70, right: 70, top: 60, bottom: 46 };
 
 export function EngineeringChart({
   series,
@@ -22,6 +22,7 @@ export function EngineeringChart({
   bep,
   showZone,
   pointer,
+  singlePointer = false,
   npsha,
   compact = false,
 }: {
@@ -32,6 +33,7 @@ export function EngineeringChart({
   bep?: CurvePoint;
   showZone: boolean;
   pointer: boolean;
+  singlePointer?: boolean;
   npsha?: number;
   compact?: boolean;
 }) {
@@ -95,11 +97,15 @@ export function EngineeringChart({
       q: ((bounded - P.left) / (W - P.left - P.right)) * maxima.q,
     });
   };
+  const pointerSeries = singlePointer
+    ? visible.filter(
+        (item) => item.type === "qh" && item.pumpId === primaryQh?.pumpId,
+      )
+    : visible.filter(
+        (item) => item.type !== "qh" || item.pumpId === primaryQh?.pumpId,
+      );
   const tooltipSeries = cursor
-    ? visible
-        .filter(
-          (item) => item.type !== "qh" || item.pumpId === primaryQh?.pumpId,
-        )
+    ? pointerSeries
         .filter((item) => cursor.q <= (item.points.at(-1)?.q ?? 0))
         .map((item) => ({
           ...item,
@@ -157,8 +163,8 @@ export function EngineeringChart({
               y1={P.top}
               y2={H - P.bottom}
             />
-            <text className="plot-bep-label" x={x(bep.q) + 8} y={P.top + 18}>
-              BEP {bep.q.toFixed(1)}
+            <text className="plot-bep-label" x={x(bep.q) + 8} y={P.top - 14}>
+              BEP {bep.q.toFixed(1)} м³/ч
             </text>
           </>
         )}
@@ -176,13 +182,25 @@ export function EngineeringChart({
         )}
         {visible.map((item) => {
           const end = item.points.at(-1);
+          const typeIndex = visible.filter((curve) => curve.type === item.type).findIndex((curve) => curve.key === item.key);
+          const pattern = item.dashed
+            ? "5 4"
+            : item.type === "eff"
+              ? "11 5"
+              : item.type === "npsh"
+                ? "2 5"
+                : item.type === "power"
+                  ? "12 4 2 4"
+                  : ([undefined, "9 5", "2 5"][typeIndex] as string | undefined);
+          const width = item.type === "qh" ? (typeIndex === 0 ? 2.5 : 2) : item.type === "power" ? 2.1 : 1.8;
           return (
             <g key={item.key}>
               <path
                 className={`plot-series plot-${item.type}`}
                 style={{
                   stroke: item.color,
-                  strokeDasharray: item.dashed ? "8 6" : undefined,
+                  strokeDasharray: pattern,
+                  strokeWidth: width,
                 }}
                 d={path(item.points, item.type)}
               />
@@ -276,15 +294,15 @@ export function EngineeringChart({
         {cursor && (
           <g className="plot-cursor">
             <line x1={cursor.x} x2={cursor.x} y1={P.top} y2={H - P.bottom} />
-            <circle
-              cx={cursor.x}
-              cy={
-                primaryQh
-                  ? y(interpolate(primaryQh.points, cursor.q), "qh")
-                  : P.top
-              }
-              r="6"
-            />
+            {tooltipSeries.map((item) => (
+              <circle
+                key={`cursor-${item.key}`}
+                cx={cursor.x}
+                cy={y(item.value, item.type)}
+                r="6"
+                style={{ fill: item.color }}
+              />
+            ))}
             <g
               transform={`translate(${Math.min(cursor.x + 16, W - 310)} ${P.top + 18})`}
             >

@@ -176,7 +176,7 @@ export function CurveWorkspace({
               className={layers.includes(key) ? "active" : ""}
               onClick={() => toggleLayer(key)}
             >
-              <i style={{ background: curveLabels[key].color }} />
+              <i className={`metric-swatch metric-${key}`} style={{ color: curveLabels[key].color }} />
               {curveLabels[key].label}
             </button>
           ))}
@@ -622,9 +622,10 @@ export function CurveWorkspace({
             </h2>
             <p>
               {selected.length} {selected.length === 1 ? "модель" : "модели"} ·{" "}
-              {frequency} Гц · колесо {impellerPercent}% · {parallel} насос(а)
+              {frequency} Гц · колесо {impellerPercent}% · {parallel} {parallel === 1 ? "насос" : parallel < 5 ? "насоса" : "насосов"}
             </p>
           </div>
+          <div className="canvas-duty-context"><small>Рабочая точка</small><b>Q {context.q} м³/ч · H {context.h} м</b><span>{context.dn}</span></div>
           <div className="canvas-legend">
             <span>
               <i className="legend-zone" />
@@ -653,6 +654,7 @@ export function CurveWorkspace({
             bep={bep}
             showZone={showZone}
             pointer={pointer}
+            singlePointer
             npsha={npsha}
           />
         ) : (

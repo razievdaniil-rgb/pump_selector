@@ -50,7 +50,7 @@
   white-space: nowrap;
 }
 .required-head {
-  stroke: #e86b5c;
+  stroke: #d23b30;
   stroke-width: 1.8;
   stroke-dasharray: 7 5;
 }
@@ -318,7 +318,7 @@
   stroke-width: 2.5;
 }
 .required-head {
-  stroke: #e75d50;
+  stroke: #d23b30;
   stroke-width: 1.5;
   stroke-dasharray: 6 5;
 }
@@ -766,7 +766,7 @@
   font-size: 9px;
 }
 .legend-system {
-  border-top: 2px dashed #e75d50;
+  border-top: 2px dashed #d23b30;
 }
 .engineering-plot {
   width: 100%;
@@ -809,7 +809,7 @@
 }
 .plot-system {
   fill: none;
-  stroke: #e75d50;
+  stroke: #d23b30;
   stroke-width: 1.3;
   stroke-dasharray: 7 5;
 }
@@ -1545,5 +1545,260 @@
     height: auto;
     overflow: hidden;
     box-sizing: border-box;
+  }
+}
+/* Compact graph pass: preserve approved functionality and raise useful content. */
+.inline-select-action{display:none!important}
+.inline-curve-workspace .curve-toolbar{min-height:48px;padding:6px 8px;margin-top:0!important}
+.inline-curve-workspace .curve-mode-tabs button,.inline-curve-workspace .chart-view-tools>button,.inline-curve-workspace .segmented button{height:30px}
+.inline-curve-workspace .curve-canvas{margin-top:8px!important;padding-top:13px}
+.inline-curve-workspace .curve-canvas-heading{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:start;gap:10px 16px}
+.canvas-duty-context{min-width:174px;padding:8px 10px;border:1px solid #cbd9f7;border-radius:8px;background:var(--blue-soft);display:grid;grid-template-columns:1fr auto;gap:2px 8px}
+.canvas-duty-context small{grid-column:1/-1;color:var(--muted);font-size:9px}.canvas-duty-context b{font-size:12px}.canvas-duty-context span{color:var(--muted);font-size:9px;text-align:right}
+.inline-curve-workspace .canvas-legend{justify-content:flex-end;max-width:390px;margin:0}
+.analog-equipment .panel-title{margin-bottom:7px}.analog-row{width:100%;padding:9px 0;border:0;border-top:1px solid var(--border);background:transparent;display:flex;align-items:center;gap:7px;text-align:left}.analog-row span{min-width:0;display:grid;gap:2px}.analog-row b,.analog-row small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.analog-row b{font-size:10px}.analog-row small{color:var(--muted);font-size:8px}.analog-row em{margin-left:auto;color:var(--green);font-size:10px;font-style:normal;font-weight:750}.analog-note{display:block;margin-top:7px;color:var(--muted);font-size:8px;line-height:1.35}
+@container curveworkspace (max-width:850px){.inline-curve-workspace .curve-canvas-heading{grid-template-columns:1fr auto}.inline-curve-workspace .canvas-legend{grid-column:1/-1;justify-content:flex-start;max-width:none}.canvas-duty-context{min-width:155px}}
+@media(max-width:760px){.inline-curve-workspace .curve-canvas-heading{grid-template-columns:1fr}.canvas-duty-context{width:100%;min-width:0}.inline-curve-workspace .canvas-legend{grid-column:1}.analog-row b{font-size:11px}}
+/* WCAG: curves remain distinguishable without color perception. */
+.metric-swatch{width:18px!important;height:0!important;border-radius:0!important;background:transparent!important;border-top:2px solid currentColor}
+.metric-swatch.metric-qh{border-top-width:3px;border-top-style:solid}
+.metric-swatch.metric-eff{border-top-style:dashed}
+.metric-swatch.metric-npsh{border-top-style:dotted}
+.metric-swatch.metric-power{height:3px!important;border-top:0;background:repeating-linear-gradient(90deg,currentColor 0 8px,transparent 8px 12px,currentColor 12px 14px,transparent 14px 18px)!important}
+.plot-qh{stroke-width:2.5}
+.plot-eff{stroke-width:1.8;stroke-dasharray:11 5}
+.plot-npsh{stroke-width:1.8;stroke-dasharray:2 5}
+.plot-power{stroke-width:2.1;stroke-dasharray:12 4 2 4}
+/* Small-screen metric toolbar: keep all five controls inside the card. */
+@media (max-width: 500px) {
+  .inline-curve-workspace .curve-mode-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 3px;
+    overflow: visible;
+  }
+  .inline-curve-workspace .curve-mode-tabs button {
+    width: 100%;
+    min-width: 0;
+    padding: 0 3px;
+    gap: 2px;
+    justify-content: center;
+    font-size: 7.5px;
+    white-space: nowrap;
+  }
+  .inline-curve-workspace .curve-mode-tabs button i,
+  .inline-curve-workspace .metric-swatch {
+    width: 11px !important;
+    flex: 0 0 11px;
+  }
+}
+/* Compact engineering workspace: keep results visible sooner without losing chart readability. */
+.inline-curve-workspace .curve-canvas {
+  padding: 11px 14px 6px;
+}
+.inline-curve-workspace .engineering-chart-v2,
+.inline-curve-workspace .split-chart .engineering-chart-v2 {
+  aspect-ratio: 1040 / 390;
+}
+.inline-curve-workspace .curve-canvas-heading {
+  gap: 7px 12px;
+}
+.inline-curve-workspace .curve-canvas-heading h2 {
+  font-size: 15px;
+}
+.inline-curve-workspace .curve-canvas-heading p {
+  margin-top: 2px;
+  font-size: 9px;
+}
+.inline-curve-workspace .canvas-duty-context {
+  min-width: 160px;
+  padding: 6px 8px;
+}
+.inline-curve-workspace .canvas-duty-context b {
+  font-size: 11px;
+}
+.inline-curve-workspace .canvas-legend {
+  gap: 9px;
+}
+.inline-curve-workspace .curve-actions {
+  margin-top: 6px;
+  padding: 6px 8px;
+  gap: 6px;
+}
+.inline-curve-workspace .curve-actions button {
+  height: 32px;
+  padding: 0 10px;
+  font-size: 9px;
+}
+.inline-curve-workspace .curve-config-panel {
+  margin-top: 5px;
+  padding: 10px 12px;
+  grid-template-columns: minmax(155px, .55fr) minmax(0, 2.45fr);
+  gap: 7px 14px;
+}
+.inline-curve-workspace .config-copy b {
+  font-size: 12px;
+}
+.inline-curve-workspace .config-copy span {
+  margin-top: 2px;
+  font-size: 9px;
+  line-height: 1.3;
+}
+.inline-curve-workspace .inline-fields {
+  grid-template-columns: minmax(105px, 1fr) minmax(105px, 1fr) auto;
+  gap: 7px;
+}
+.inline-curve-workspace .inline-fields input,
+.inline-curve-workspace .inline-fields select,
+.inline-curve-workspace .config-grid input {
+  height: 34px;
+  margin-top: 3px;
+}
+.inline-curve-workspace .point-actions {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 6px;
+}
+.inline-curve-workspace .point-actions .button {
+  height: 34px;
+  padding: 0 11px;
+  font-size: 9px;
+}
+.inline-curve-workspace .point-list {
+  gap: 5px;
+}
+.inline-curve-workspace .point-list > span {
+  padding: 5px 7px;
+  font-size: 9px;
+}
+.inline-curve-workspace .curve-models {
+  margin-top: 6px;
+  padding: 8px 10px;
+  gap: 6px 8px;
+}
+.inline-curve-workspace .curve-model {
+  padding: 6px 8px;
+}
+.inline-curve-workspace .curve-model > i {
+  height: 24px;
+}
+.inline-curve-workspace .curve-hint {
+  min-height: 38px;
+  padding: 8px;
+}
+@container curveworkspace (max-width: 900px) {
+  .inline-curve-workspace .curve-config-panel {
+    grid-template-columns: 1fr;
+  }
+  .inline-curve-workspace .point-list,
+  .inline-curve-workspace .calculation-result,
+  .inline-curve-workspace .text-button {
+    grid-column: 1;
+  }
+}
+@container curveworkspace (max-width: 620px) {
+  .inline-curve-workspace .inline-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  .inline-curve-workspace .point-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+  }
+  .inline-curve-workspace .point-actions .button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+@media (max-width: 500px) {
+  .inline-curve-workspace .curve-canvas {
+    padding: 10px 8px 5px;
+  }
+  .inline-curve-workspace .inline-fields {
+    grid-template-columns: 1fr;
+  }
+  .inline-curve-workspace .point-actions {
+    grid-column: 1;
+  }
+}/* Final vertical compaction: results begin within a laptop viewport. */
+.inline-curve-workspace .curve-model {
+  min-height: 54px;
+  padding: 4px 7px;
+}
+.inline-curve-workspace .curve-model > i {
+  height: 18px;
+}
+.inline-curve-workspace .curve-model span b {
+  font-size: 9px;
+}
+.inline-curve-workspace .curve-model span small,
+.inline-curve-workspace .curve-model em {
+  font-size: 8px;
+}
+.inline-curve-workspace .curve-hint {
+  min-height: 32px;
+  padding: 6px 8px;
+  font-size: 8px;
+}/* Rebalance: larger plot, denser characteristics toolbar. */
+.inline-curve-workspace .curve-toolbar {
+  min-height: 38px;
+  padding: 3px 6px;
+}
+.inline-curve-workspace .curve-mode-tabs,
+.inline-curve-workspace .chart-view-tools {
+  gap: 4px;
+}
+.inline-curve-workspace .curve-mode-tabs button,
+.inline-curve-workspace .chart-view-tools > button,
+.inline-curve-workspace .segmented button {
+  height: 26px;
+  padding-inline: 8px;
+  font-size: 8.5px;
+}
+.inline-curve-workspace .curve-mode-tabs button i,
+.inline-curve-workspace .metric-swatch {
+  width: 14px;
+  flex-basis: 14px;
+}/* Pumpolis-like hierarchy: dominant plot with a compact engineering summary below. */
+.inline-curve-workspace .curve-values {
+  margin-top: 6px;
+}
+.inline-curve-workspace .curve-values > div {
+  min-height: 62px;
+  padding: 7px 11px;
+}
+.inline-curve-workspace .curve-values span {
+  font-size: 8px;
+  line-height: 1.15;
+}
+.inline-curve-workspace .curve-values b {
+  margin: 2px 0;
+  font-size: 14px;
+  line-height: 1.12;
+}
+.inline-curve-workspace .curve-values small {
+  font-size: 8px;
+  line-height: 1.15;
+}
+.inline-curve-workspace .curve-values .value-ok {
+  font-size: 12px;
+}
+@container curveworkspace (max-width: 520px) {
+  .inline-curve-workspace .curve-values > div {
+    min-height: 58px;
+    padding: 7px 9px;
+  }
+  .inline-curve-workspace .curve-values b {
+    font-size: 13px;
+  }
+}@media (max-width: 500px) {
+  .inline-curve-workspace .curve-mode-tabs button {
+    padding-inline: 2px;
+    gap: 2px;
+    font-size: 7.5px;
+  }
+  .inline-curve-workspace .curve-mode-tabs button i,
+  .inline-curve-workspace .metric-swatch {
+    width: 10px !important;
+    flex: 0 0 10px;
   }
 }

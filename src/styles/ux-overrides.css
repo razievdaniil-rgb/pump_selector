@@ -25,7 +25,7 @@
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
 .selection-graph {
   padding: 20px;
@@ -287,8 +287,8 @@
   display: none;
 }
 .curve-tabs .layer-eff.active {
-  background: #169b53;
-  border-color: #169b53;
+  background: #15924a;
+  border-color: #15924a;
 }
 .curve-tabs .layer-npsh.active {
   background: #d98b32;

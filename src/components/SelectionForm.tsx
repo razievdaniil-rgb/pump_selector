@@ -98,7 +98,7 @@ export function SelectionForm({
   onReset: () => void;
 }) {
   const [engineeringOpen, setEngineeringOpen] = useState(false),
-    invalid = context.q <= 0 || context.h <= 0;
+    invalid = context.q <= 0 || context.h <= 0 || !context.dn;
   const update = (key: Key, value: string | number) =>
     onChange({ ...context, [key]: value });
   const availablePumpTypes = allowedPumpTypes?.length
@@ -131,7 +131,7 @@ export function SelectionForm({
       </div>
       {invalid && (
         <p className="field-error" role="alert">
-          Укажите расход и напор больше нуля.
+          Укажите расход, напор и присоединительный DN.
         </p>
       )}
       <SelectField
@@ -139,6 +139,13 @@ export function SelectionForm({
         field="pumpType"
         value={context.pumpType}
         options={availablePumpTypes.map(([name]) => name)}
+        onChange={update}
+      />
+      <SelectField
+        label="DN (вход / выход)"
+        field="dn"
+        value={context.dn}
+        options={["DN32 / DN32", "DN40 / DN40", "DN50 / DN50", "DN65 / DN65"]}
         onChange={update}
       />
       {allowedPumpTypes && (
@@ -197,27 +204,13 @@ export function SelectionForm({
             suffix="мм²/с"
             onChange={update}
           />
-          <div className="field-pair dn-pn-pair">
-            <SelectField
-              label="DN (вход / выход)"
-              field="dn"
-              value={context.dn}
-              options={[
-                "DN32 / DN32",
-                "DN40 / DN40",
-                "DN50 / DN50",
-                "DN65 / DN65",
-              ]}
-              onChange={update}
-            />
-            <SelectField
-              label="PN"
-              field="pn"
-              value={context.pn}
-              options={["PN10", "PN16", "PN25"]}
-              onChange={update}
-            />
-          </div>
+          <SelectField
+            label="PN"
+            field="pn"
+            value={context.pn}
+            options={["PN10", "PN16", "PN25"]}
+            onChange={update}
+          />
           <SelectField
             label="Материал проточной части"
             field="material"

@@ -64,7 +64,7 @@ for (const viewport of viewports) {
   const submit =
     viewport.width <= 760
       ? page.locator(".selection-dock .dock-submit")
-      : page.locator(".inline-select-action");
+      : page.locator(".dock-submit");
   await submit.click();
   add(
     name,

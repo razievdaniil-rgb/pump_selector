@@ -47,7 +47,7 @@ add("Escape closes dialog", (await page.locator(".demo-dialog").count()) === 0);
 await page.locator(".scenario").first().click();
 await page.locator(".selection-form input").first().fill("999");
 await page.locator(".selection-form input").nth(1).fill("999");
-await page.locator(".inline-select-action").click();
+await page.locator(".dock-submit").click();
 add("empty graph state", await page.locator(".graph-empty").isVisible());
 add(
   "curve workspace hidden without curves",
@@ -60,7 +60,7 @@ add(
 
 await page.locator(".dock-restart").click();
 await page.locator(".scenario").first().click();
-await page.locator(".inline-select-action").click();
+await page.locator(".dock-submit").click();
 await page
   .locator(".result-card")
   .first()
