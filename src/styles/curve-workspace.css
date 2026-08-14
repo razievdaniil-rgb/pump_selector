@@ -1471,3 +1471,79 @@
     gap: 7px;
   }
 }
+/* Adaptive stabilization after 100px sweep */
+@media (max-width: 1180px) and (min-width: 761px) {
+  .selector-header nav button .counter {
+    position: absolute;
+    top: 3px;
+    right: 1px;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #fff;
+    font-size: 9px;
+    line-height: 12px;
+  }
+}
+
+@media (max-width: 1500px) and (min-width: 901px) {
+  .inline-curve-workspace .curve-mode-tabs button {
+    padding: 0 7px;
+    font-size: 9px;
+  }
+  .inline-curve-workspace .chart-view-tools {
+    width: auto;
+    justify-content: flex-end;
+  }
+  .inline-curve-workspace .chart-view-tools > button,
+  .inline-curve-workspace .segmented button {
+    padding: 0 7px;
+    font-size: 9px;
+  }
+}
+
+@container curveworkspace (max-width: 820px) {
+  .inline-curve-workspace .curve-toolbar {
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 6px;
+  }
+  .inline-curve-workspace .curve-mode-tabs {
+    flex: 1 1 100%;
+    width: 100%;
+    overflow-x: auto;
+  }
+  .inline-curve-workspace .chart-view-tools {
+    flex: 1 1 100%;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 400px) {
+  .inline-curve-workspace .curve-mode-tabs {
+    gap: 3px;
+  }
+  .inline-curve-workspace .curve-mode-tabs button {
+    height: 32px;
+    padding: 0 5px;
+    gap: 3px;
+    font-size: 8px;
+  }
+  .inline-curve-workspace .curve-mode-tabs button i {
+    width: 10px;
+  }
+}
+
+@media (max-width: 1400px) and (min-width: 901px) {
+  .right-rail {
+    align-items: start;
+  }
+  .right-rail > .card {
+    align-self: start;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+}
